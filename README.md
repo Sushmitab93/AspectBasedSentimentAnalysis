@@ -1,18 +1,27 @@
-# Aspect-Based Sentiment Analysis (ABSA) — Amazon Electronics Reviews
+# Aspect-Based Sentiment Analysis (ABSA) - Amazon Electronics Reviews
 
 ## Overview
-An end-to-end NLP pipeline that identifies **which product feature** a review sentence discusses and **how the reviewer feels** about it. Unlike standard sentiment analysis that gives one label per review, this system operates at the sentence level — capturing multiple opinions from a single review.
+An end-to-end NLP pipeline that identifies **which product feature** a review sentence discusses and **how the reviewer feels** about it. Unlike standard sentiment analysis that gives one label per review, this system operates at the sentence level - capturing multiple opinions from a single review.
 
-## Pipeline
-1. **Data Collection** — Stream 50,000 electronics reviews from McAuley Lab Amazon Reviews 2023
-2. **Preprocessing** — Text cleaning, sentence tokenization (NLTK), short sentence filtering
-3. **Labeling** — Keyword-based aspect labeling (8 categories), rating-based sentiment labeling
-4. **Balancing** — Joint aspect × sentiment sampling to handle class imbalance
-5. **Embeddings** — Frozen DistilBERT CLS token extraction (768-dim)
-6. **Training** — Two custom DNNs: aspect classifier (8-class softmax) and binary sentiment classifier (sigmoid)
-7. **Evaluation** — Confusion matrices, per-aspect accuracy breakdown, misclassified example analysis
-8. **Baseline** — Zero-shot BART-MNLI comparison to validate trained model performance
-9. **Explainability** — LLaMA as independent judge (makes its own prediction, then agrees/disagrees with DNN)
+### Pipeline Overview
+| Step | Description |
+|------|-------------|
+| 1 | Data collection from Amazon Reviews 2023 |
+| 2 | Data exploration & inspection |
+| 3 | Data cleaning & preprocessing |
+| 4 | Text cleaning & sentence tokenization |
+| 5 | Aspect labeling (keyword-based) |
+| 6 | Sentiment labeling (rating-based) |
+| 7 | Save cleaned dataset |
+| 8 | Exploratory data analysis |
+| 9 | Dataset balancing (aspect × sentiment) |
+| 10 | DistilBERT embedding extraction |
+| 11 | DNN model training |
+| 12 | Binary sentiment model |
+| 13 | Evaluation & error analysis |
+| 14 | Baseline comparison (zero-shot) |
+| 15 | LLM integration (Llama 3 as judge) |
+| 16 | Ethical considerations |
 
 ## Results
 | Model | Architecture | Accuracy |
