@@ -21,7 +21,6 @@ An end-to-end NLP pipeline that identifies **which product feature** a review se
 | 13 | Evaluation & error analysis |
 | 14 | Baseline comparison (zero-shot) |
 | 15 | LLM integration (Llama 3 as judge) |
-| 16 | Ethical considerations |
 
 ## Results
 | Model | Architecture | Accuracy |
