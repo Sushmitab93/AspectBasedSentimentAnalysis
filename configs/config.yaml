@@ -1,0 +1,76 @@
+# ABSA Configuration — Paths and Hyperparameters
+
+# Data collection and preprocessing
+data:
+  max_reviews: 50000
+  min_sentence_length: 5  # minimum words per sentence
+  test_split: 0.2  # fraction for test set (stratified at review level)
+  random_seed: 42
+
+  # Paths (relative to project root)
+  raw_data_path: data/raw/electronics_reviews.jsonl
+  cleaned_data_path: data/processed/cleaned.csv
+  balanced_data_path: data/processed/balanced.csv
+  embeddings_path: data/processed/embeddings.npy
+
+  # Dataset source
+  dataset_url: https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023/resolve/main/raw/review_categories/Electronics.jsonl
+  dataset_name: Amazon Electronics Reviews 2023
+
+# Aspect labeling configuration
+labeling:
+  battery: ['battery', 'charge', 'charging', 'power', 'drain']
+  display: ['screen', 'display', 'resolution', 'brightness']
+  performance: ['speed', 'fast', 'slow', 'lag', 'performance', 'processor']
+  sound: ['sound', 'audio', 'speaker', 'volume', 'noise', 'bass']
+  design: ['design', 'build', 'material', 'size', 'weight']
+  camera: ['camera', 'photo', 'picture', 'lens', 'video', 'zoom']
+  connectivity: ['wifi', 'bluetooth', 'connection', 'signal', 'network']
+  price: ['price', 'cost', 'expensive', 'cheap', 'value', 'worth']
+
+# Sentiment mapping
+sentiment:
+  positive_threshold: 4  # 4-5 stars -> positive
+  neutral_rating: 3     # 3 stars -> neutral
+
+# Embedding extraction
+embeddings:
+  model: distilbert-base-uncased
+  max_length: 64
+  batch_size: 32
+
+# Balancing configuration
+balancing:
+  remove_general: true  # remove sentences with no specific aspect keyword
+  max_samples_per_aspect_sentiment: 500  # balance at (aspect, sentiment) level
+
+# Model architectures
+models:
+  aspect:
+    hidden_dims: [512, 256]
+    dropout: 0.4
+    l2_regularization: 0.001
+    learning_rate: 0.001
+
+  sentiment:
+    hidden_dims: [512, 256]
+    dropout: 0.4
+    l2_regularization: 0.001
+    learning_rate: 0.001
+
+# Training configuration
+training:
+  epochs: 50
+  batch_size: 32
+  validation_split: 0.1
+  early_stopping_patience: 5
+  lr_reduce_patience: 3
+  lr_reduce_factor: 0.5
+  min_lr: 1.0e-6
+
+# Evaluation and reporting
+evaluation:
+  confusion_matrix: true
+  per_aspect_metrics: true
+  save_predictions: true
+  predictions_path: results/predictions.csv
