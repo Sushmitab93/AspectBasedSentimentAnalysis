@@ -3,7 +3,6 @@
 import yaml
 from pathlib import Path
 from sklearn.preprocessing import LabelEncoder
-from sklearn.linear_model import LogisticRegression
 
 from absa.data import (
     load_reviews_from_jsonl,
@@ -260,65 +259,6 @@ def train_sentiment_model(data: dict, config: dict) -> dict:
     }
 
 
-def run_baseline(data: dict, config: dict) -> None:
-    """LogisticRegression baseline on the same embeddings for comparison."""
-    print("\n" + "=" * 70)
-    print("  BASELINE: LogisticRegression on DistilBERT embeddings")
-    print("=" * 70)
-
-    # Aspect baseline
-    print("\n--- Aspect Classification (LogisticRegression) ---")
-    aspect_encoder = LabelEncoder()
-    train_aspects = aspect_encoder.fit_transform(data['train_df']['aspect'])
-    test_aspects = aspect_encoder.transform(data['test_df']['aspect'])
-
-    lr_aspect = LogisticRegression(max_iter=1000, multi_class='multinomial')
-    lr_aspect.fit(data['train_embeddings'], train_aspects)
-    lr_aspect_preds = lr_aspect.predict(data['test_embeddings'])
-
-    aspect_metrics = compute_metrics(
-        test_aspects, lr_aspect_preds,
-        class_names=aspect_encoder.classes_,
-        task='multiclass'
-    )
-    print(f"Test Accuracy: {aspect_metrics['accuracy']:.4f}")
-    print(f"Macro-F1:      {aspect_metrics['macro_f1']:.4f}")
-
-    # Sentiment baseline
-    print("\n--- Sentiment Classification (LogisticRegression) ---")
-    train_binary = data['train_df'][data['train_df']['sentiment'] != 'neutral']
-    test_binary = data['test_df'][data['test_df']['sentiment'] != 'neutral']
-
-    train_emb = data['train_embeddings'][data['train_df'].index.get_indexer(train_binary.index)]
-    test_emb = data['test_embeddings'][data['test_df'].index.get_indexer(test_binary.index)]
-
-    sentiment_encoder = LabelEncoder()
-    train_sentiments = sentiment_encoder.fit_transform(train_binary['sentiment'])
-    test_sentiments = sentiment_encoder.transform(test_binary['sentiment'])
-
-    lr_sent = LogisticRegression(max_iter=1000)
-    lr_sent.fit(train_emb, train_sentiments)
-    lr_sent_preds = lr_sent.predict(test_emb)
-
-    sent_metrics = compute_metrics(
-        test_sentiments, lr_sent_preds,
-        class_names=sentiment_encoder.classes_,
-        task='binary'
-    )
-    print(f"Test Accuracy: {sent_metrics['accuracy']:.4f}")
-    print(f"Macro-F1:      {sent_metrics['macro_f1']:.4f}")
-
-    # Comparison summary
-    print("\n" + "-" * 70)
-    print("BASELINE VS DNN COMPARISON")
-    print("-" * 70)
-    print(f"{'Task':<15} {'Metric':<12} {'DNN':<10} {'LR Baseline':<12} {'Delta':<10}")
-    print(f"{'Aspect':<15} {'Accuracy':<12} {data['aspect_metrics']['accuracy']:<10.4f} {aspect_metrics['accuracy']:<12.4f} {data['aspect_metrics']['accuracy'] - aspect_metrics['accuracy']:<+10.4f}")
-    print(f"{'Aspect':<15} {'Macro-F1':<12} {data['aspect_metrics']['macro_f1']:<10.4f} {aspect_metrics['macro_f1']:<12.4f} {data['aspect_metrics']['macro_f1'] - aspect_metrics['macro_f1']:<+10.4f}")
-    print(f"{'Sentiment':<15} {'Accuracy':<12} {data['sentiment_metrics']['accuracy']:<10.4f} {sent_metrics['accuracy']:<12.4f} {data['sentiment_metrics']['accuracy'] - sent_metrics['accuracy']:<+10.4f}")
-    print(f"{'Sentiment':<15} {'Macro-F1':<12} {data['sentiment_metrics']['macro_f1']:<10.4f} {sent_metrics['macro_f1']:<12.4f} {data['sentiment_metrics']['macro_f1'] - sent_metrics['macro_f1']:<+10.4f}")
-
-
 def run_full_pipeline(config_path: str = 'configs/config.yaml') -> dict:
     """Run the complete ABSA pipeline."""
     print("=" * 70)
@@ -331,7 +271,6 @@ def run_full_pipeline(config_path: str = 'configs/config.yaml') -> dict:
     data = extract_embeddings(data, config)
     data = train_aspect_model(data, config)
     data = train_sentiment_model(data, config)
-    run_baseline(data, config)
 
     print("\n" + "=" * 70)
     print("  PIPELINE COMPLETE")

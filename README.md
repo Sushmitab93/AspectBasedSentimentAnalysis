@@ -8,7 +8,6 @@ An end-to-end NLP pipeline that identifies **which product feature** a review se
 - **Review-level splitting** - prevents data leakage by keeping sentences from the same review together
 - **Pure PyTorch** - no TensorFlow dependency
 - **Frozen DistilBERT embeddings** + 2-layer DNN for both aspect classification (8 classes) and sentiment classification (binary)
-- **LogisticRegression baseline** - proves the DNN's hidden layers add real value on the same embeddings
 - **Comprehensive metrics** - per-class accuracy, confusion matrices, macro-F1
 
 ## Overview
@@ -20,7 +19,6 @@ This project solves a classic ABSA problem on 50K Amazon Electronics reviews. Th
 3. Labels aspects by keyword matching and sentiment by star rating
 4. Extracts frozen DistilBERT embeddings
 5. Trains a PyTorch DNN classifier for aspects (8-way) and sentiment (binary)
-6. Compares against a LogisticRegression baseline on the same embeddings
 
 ## Usage
 
@@ -69,10 +67,6 @@ Requires Python 3.10+ and PyTorch. On Windows, use the provided `.venv`.
 |-------|-------------|----------|----------|
 | Aspect Classifier | DistilBERT → 768→512→256→8 | 81.08% | 0.78 |
 | Sentiment Classifier | DistilBERT → 768→512→256→1 | 63.64% | 0.74 |
-| LR Baseline (Aspect) | Logistic Regression | - | - |
-| LR Baseline (Sentiment) | Logistic Regression | - | - |
-
-> The DNN consistently outperforms LogisticRegression on the same frozen embeddings, confirming the hidden layers add meaningful representational power.
 
 ### Aspect Classifier - Per-Class Breakdown
 
@@ -123,7 +117,7 @@ src/absa/
 │   └── trainer.py              # Training loops, early stopping, LR scheduling
 ├── eval/
 │   └── metrics.py              # Confusion matrices, macro-F1
-├── pipeline.py                 # Orchestrates the full pipeline + baseline comparison
+├── pipeline.py                 # Orchestrates the full pipeline
 └── __init__.py
 ```
 
