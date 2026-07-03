@@ -1,15 +1,15 @@
 # Aspect-Based Sentiment Analysis (ABSA) - Amazon Electronics Reviews
 
-An end-to-end NLP pipeline that identifies **which product feature** a review sentence discusses and **how the reviewer feels** about it. Unlike standard sentiment analysis that gives one label per review, this system operates at the sentence level — capturing multiple opinions from a single review.
+An end-to-end NLP pipeline that identifies **which product feature** a review sentence discusses and **how the reviewer feels** about it. Unlike standard sentiment analysis that gives one label per review, this system operates at the sentence level, capturing multiple opinions from a single review.
 
 ## Highlights
 
-- **Sentence-level analysis** — captures multiple aspect-opinion pairs per review
-- **Review-level splitting** — prevents data leakage by keeping sentences from the same review together
-- **Pure PyTorch** — no TensorFlow dependency
+- **Sentence-level analysis** - captures multiple aspect-opinion pairs per review
+- **Review-level splitting** - prevents data leakage by keeping sentences from the same review together
+- **Pure PyTorch** - no TensorFlow dependency
 - **Frozen DistilBERT embeddings** + 2-layer DNN for both aspect classification (8 classes) and sentiment classification (binary)
-- **LogisticRegression baseline** — proves the DNN's hidden layers add real value on the same embeddings
-- **Comprehensive metrics** — per-class accuracy, confusion matrices, macro-F1
+- **LogisticRegression baseline** - proves the DNN's hidden layers add real value on the same embeddings
+- **Comprehensive metrics** - per-class accuracy, confusion matrices, macro-F1
 
 ## Overview
 
@@ -38,7 +38,7 @@ with open('configs/config.yaml') as f:
 df = pd.read_csv('data/raw/reviews.csv')
 df = preprocess_reviews(df, min_sentence_length=config['data']['min_sentence_length'])
 
-# Split at review level — critical!
+# Split at review level - critical!
 train_df, test_df = split_by_review(df, test_size=0.2, random_state=42)
 
 # Extract embeddings & train
@@ -69,25 +69,25 @@ Requires Python 3.10+ and PyTorch. On Windows, use the provided `.venv`.
 |-------|-------------|----------|----------|
 | Aspect Classifier | DistilBERT → 768→512→256→8 | 81.08% | 0.78 |
 | Sentiment Classifier | DistilBERT → 768→512→256→1 | 63.64% | 0.74 |
-| LR Baseline (Aspect) | Logistic Regression | — | — |
-| LR Baseline (Sentiment) | Logistic Regression | — | — |
+| LR Baseline (Aspect) | Logistic Regression | - | - |
+| LR Baseline (Sentiment) | Logistic Regression | - | - |
 
 > The DNN consistently outperforms LogisticRegression on the same frozen embeddings, confirming the hidden layers add meaningful representational power.
 
-### Aspect Classifier — Per-Class Breakdown
+### Aspect Classifier - Per-Class Breakdown
 
 | Aspect | Accuracy | Samples | Notes |
 |--------|----------|---------|-------|
-| sound | 86.7% | 2,604 | Best performer — distinct keywords |
+| sound | 86.7% | 2,604 | Best performer - distinct keywords |
 | price | 84.9% | 1,567 | Strong signal from cost/value terms |
 | display | 83.4% | 988 | Some confusion with camera |
 | camera | 82.3% | 2,225 | |
 | connectivity | 78.9% | 695 | Limited training samples |
 | battery | 78.5% | 2,794 | Occurs in many contexts, some noise |
 | design | 73.8% | 1,349 | Overlaps with build quality terms |
-| performance | 67.4% | 846 | Most confused — "fast/slow" used across categories |
+| performance | 67.4% | 846 | Most confused - "fast/slow" used across categories |
 
-### Sentiment Classifier — Imbalance Warning
+### Sentiment Classifier - Imbalance Warning
 
 ```
               precision    recall  f1-score   support
@@ -127,7 +127,7 @@ src/absa/
 └── __init__.py
 ```
 
-Config: `configs/config.yaml` — hyperparameters, aspect keywords, dataset URL, paths.
+Config: `configs/config.yaml` - hyperparameters, aspect keywords, dataset URL, paths.
 
 ## 📓 Notebook
 
@@ -142,7 +142,7 @@ Config: `configs/config.yaml` — hyperparameters, aspect keywords, dataset URL,
 
 - Keyword-based aspect labeling is noisy; consider sequence labeling (NER) models
 - Sentiment is inferred from overall rating, not sentence-level annotations
-- Neutral sentiment class (3-star) is underrepresented — currently dropped entirely
+- Neutral sentiment class (3-star) is underrepresented - currently dropped entirely
 
 ## Feedback & Contributions
 
