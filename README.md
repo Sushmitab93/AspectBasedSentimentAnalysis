@@ -57,10 +57,6 @@ AspectBasedSentimentAnalysis/
 ├── pyproject.toml                  # Package definition and dependencies
 └── README.md
 ```
-
-Generated folders (`results/`, `rag/chroma_db/`) and secrets (`.env`) are excluded by `.gitignore`.
----
-
 ## Part 1: ABSA Pipeline
 
 ### How it works
