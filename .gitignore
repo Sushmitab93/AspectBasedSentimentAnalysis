@@ -2,6 +2,10 @@
 results/
 *.csv
 
+rag/chroma_db/
+.agents/
+.claude/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
